@@ -1,0 +1,94 @@
+import javax.swing.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+public class IMCCalculator extends JFrame {
+
+    private JTextField pesoField;
+    private JTextField alturaField;
+    private JLabel resultadoLabel;
+
+    public IMCCalculator() {
+        // Configurações da janela
+        setTitle("Calculadora de IMC");
+        setSize(300, 200);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setLayout(null);
+
+        // Labels
+        JLabel pesoLabel = new JLabel("Peso (kg):");
+        pesoLabel.setBounds(10, 10, 100, 25);
+        add(pesoLabel);
+
+        JLabel alturaLabel = new JLabel("Altura (cm):");
+        alturaLabel.setBounds(10, 40, 100, 25);
+        add(alturaLabel);
+
+        // Campos de texto
+        pesoField = new JTextField();
+        pesoField.setBounds(120, 10, 150, 25);
+        add(pesoField);
+
+        alturaField = new JTextField();
+        alturaField.setBounds(120, 40, 150, 25);
+        add(alturaField);
+
+        // Botão de cálculo
+        JButton calcularButton = new JButton("Calcular IMC");
+        calcularButton.setBounds(10, 70, 260, 25);
+        add(calcularButton);
+
+        // Label de resultado
+        resultadoLabel = new JLabel("Resultado:");
+        resultadoLabel.setBounds(10, 100, 260, 25);
+        add(resultadoLabel);
+
+        // Ação do botão
+        calcularButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                calcularIMC();
+            }
+        });
+    }
+
+    private void calcularIMC() {
+        try {
+            double peso = Double.parseDouble(pesoField.getText());
+            double alturaCm = Double.parseDouble(alturaField.getText());
+            double alturaM = alturaCm / 100;
+
+            double imc = peso / (alturaM * alturaM);
+            String classificacao = classificarIMC(imc);
+
+            resultadoLabel.setText(String.format("IMC: %.2f - %s", imc, classificacao));
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(this, "Por favor, insira valores válidos.", "Erro", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    private String classificarIMC(double imc) {
+        if (imc < 18.5) {
+            return "Abaixo do peso";
+        } else if (imc >= 18.5 && imc < 24.9) {
+            return "Peso normal";
+        } else if (imc >= 25 && imc < 29.9) {
+            return "Sobrepeso";
+        } else if (imc >= 30 && imc < 34.9) {
+            return "Obesidade grau I";
+        } else if (imc >= 35 && imc < 39.9) {
+            return "Obesidade grau II";
+        } else {
+            return "Obesidade grau III";
+        }
+    }
+
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                new IMCCalculator().setVisible(true);
+            }
+        });
+    }
+}
